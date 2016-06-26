@@ -1,0 +1,37 @@
+apply plugin: 'groovy'
+apply plugin: 'idea'
+
+
+repositories {
+    jcenter()
+}
+
+
+dependencies {
+    ext {
+        cucumber_version = '1.2.4'
+        geb_version = '0.13.1'
+        groovy_version = '2.4.7'
+        selenium_version = '2.53.0'
+        apache_ant = '1.9.7'
+    }
+
+    compile "org.codehaus.groovy:groovy-all:$groovy_version"
+    compile "org.gebish:geb-core:$geb_version"
+    compile "info.cukes:cucumber-core:$cucumber_version"
+    compile "info.cukes:cucumber-groovy:$cucumber_version"
+    compile "info.cukes:cucumber-junit:$cucumber_version"
+    compile "org.seleniumhq.selenium:selenium-java:$selenium_version"
+    compile "org.apache.ant:ant:$apache_ant"
+}
+
+task runCukeTests(type: Test) {
+    description = 'Geb based UI tests using cucumber'
+
+    ext.cucumberTags = project.hasProperty('cukeTags') ? "${cukeTags}" : "@all"
+    jvmArgs "-Dcucumber.options= --tags ${cucumberTags}"
+
+    testLogging {
+        events "standardOut"
+    }
+}
