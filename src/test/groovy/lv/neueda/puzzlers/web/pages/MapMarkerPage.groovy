@@ -12,10 +12,10 @@ class MapMarkerPage extends Page {
     }
 
     static content = {
-        longitudeInput(wait: true) { $(".form-control.ng-pristine.ng-untouched.ng-valid", placeholder: "Longitude") }
-        latitudeInput(wait: true) { $(".form-control.ng-pristine.ng-untouched.ng-valid", placeholder: "Latitude") }
+        longitudeInput(wait: true) { $(".control-label", text: "Lng").siblings().children() }
+        latitudeInput(wait: true) { $(".control-label", text: "Lat").siblings().children() }
         addMarkerButton(wait: true) { $(".btn.btn-primary") }
-        mapMarker(wait: true) { $(".leaflet-marker-icon.leaflet-zoom-animated.leaflet-clickable") }
+        mapMarker(wait: true) { $(".leaflet-marker-icon") }
         mapMarkerPopup(wait: true) { $(".leaflet-popup-content-wrapper") }
     }
     
