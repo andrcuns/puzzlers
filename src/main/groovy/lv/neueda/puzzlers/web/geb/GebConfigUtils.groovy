@@ -7,7 +7,7 @@ import org.openqa.selenium.chrome.ChromeDriver
 
 class GebConfigUtils {
 
-    private static final String CHROME_DRIVER_VERSION = '2.20'
+    private static final String CHROME_DRIVER_VERSION = '2.22'
 
     static WebDriver getChromeDriver() {
         def fileAttributes = currentOSFileAttributes
@@ -24,7 +24,7 @@ class GebConfigUtils {
 
     private static WebDriverFileAttributes getCurrentOSFileAttributes() {
         def fileAttributes = WebDriverFileAttributes.find { "$it" == "$Platform.current" }
-        Preconditions.checkNotNull(fileAttributes)
+        Preconditions.checkNotNull(fileAttributes, "OS type is not supported")
         fileAttributes
     }
 

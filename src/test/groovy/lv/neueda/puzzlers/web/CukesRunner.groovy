@@ -4,7 +4,7 @@ import cucumber.api.CucumberOptions
 import cucumber.api.junit.Cucumber
 import org.junit.runner.RunWith
 
-@RunWith(Cucumber.class)
+@RunWith(Cucumber)
 @CucumberOptions(
         tags = '@all',
         strict = true,
