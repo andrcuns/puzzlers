@@ -23,7 +23,7 @@ class GebConfigUtils {
     }
 
     private static WebDriverFileAttributes getCurrentOSFileAttributes() {
-        def fileAttributes = WebDriverFileAttributes.find { "$it" == "$Platform.current" }
+        def fileAttributes = WebDriverFileAttributes.find { "$it" == "${Platform.current.family()}" }
         Preconditions.checkNotNull(fileAttributes, "OS type is not supported")
         fileAttributes
     }
