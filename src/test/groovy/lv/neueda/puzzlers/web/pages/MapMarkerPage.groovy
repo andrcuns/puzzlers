@@ -19,7 +19,7 @@ class MapMarkerPage extends Page {
         mapMarkerPopup(wait: true) { $(".leaflet-popup-content-wrapper") }
     }
     
-    private def expectBaseElementsDisplayed() {
+    private expectBaseElementsDisplayed() {
         longitudeInput.displayed
         latitudeInput.displayed
         addMarkerButton.displayed

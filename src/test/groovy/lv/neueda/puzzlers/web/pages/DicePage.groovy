@@ -16,7 +16,7 @@ class DicePage extends Page {
         dice(wait: true) { $("i", class: contains("square")) }
     }
 
-    private def expectBaseElementsDisplayed() {
+    private expectBaseElementsDisplayed() {
         shuffleKnob.displayed
         dice*.displayed
     }

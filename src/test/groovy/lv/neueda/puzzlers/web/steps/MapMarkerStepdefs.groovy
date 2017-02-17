@@ -4,32 +4,34 @@ import lv.neueda.puzzlers.web.pages.MapMarkerPage
 
 import static cucumber.api.groovy.EN.*
 
+MapMarkerPage mapMarkerPage
+
 Given(~/^a user is on map marker page$/) { ->
-    to MapMarkerPage
+    mapMarkerPage = to MapMarkerPage
 }
 
 When(~/^a user enters "(.*)" in field "(.*)"$/) { String coordinateValue, String coordinateType ->
-    page."${coordinateType}Input".value(coordinateValue)
+    mapMarkerPage."${coordinateType}Input".value(coordinateValue)
 }
 
 When(~/^clicks the "Add marker" button$/) { ->
-    page.addMarkerButton.click()
+    mapMarkerPage.addMarkerButton.click()
 }
 
 Then(~/^a map marker should appear$/) { ->
-    assert page.mapMarker.displayed
+    assert mapMarkerPage.mapMarker.displayed
 }
 
 When(~/^a user clicks on a map marker$/) { ->
-    page.mapMarker.click()
+    mapMarkerPage.mapMarker.click()
 }
 
 Then(~/^a popup should appear$/) { ->
-    assert page.mapMarkerPopup.displayed
+    assert mapMarkerPage.mapMarkerPopup.displayed
 }
 
 Then(~/^a popup should contain text "(.*)"$/) { String text ->
-    assert page.mapMarkerPopup.text().contains(text)
+    assert mapMarkerPage.mapMarkerPopup.text().contains(text)
 }
 
 

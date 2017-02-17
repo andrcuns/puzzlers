@@ -1,0 +1,9 @@
+/**
+ * Enables code completion for Geb inside Cucumber step implementations.
+ */
+
+def scriptContext = context(pathRegexp: ".*/test/.*/steps/.*")
+contributor(scriptContext, {
+    delegatesTo(findClass('geb.Browser'))
+})
+

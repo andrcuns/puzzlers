@@ -7,7 +7,7 @@ import org.openqa.selenium.chrome.ChromeDriver
 
 class GebConfigUtils {
 
-    private static final String CHROME_DRIVER_VERSION = '2.22'
+    private static final String CHROME_DRIVER_VERSION = '2.27'
 
     static WebDriver getChromeDriver() {
         def fileAttributes = currentOSFileAttributes
