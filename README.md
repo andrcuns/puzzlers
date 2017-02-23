@@ -1,15 +1,18 @@
 # puzzlers
 UI testing project using cucumber and geb frameworks.
-Windows, Linux and MAC with Chrome are supported.
+Windows, Linux and MAC with Chrome, Firefox and PhantomJs are supported.
 
 ## Running
 ### From commandline
-To run all features
+To run all features with chrome browser
 
     ./gradlew runCukeTests
+To run in a different browser
+
+    ./gradlew runCukeTests -Pwebdriver=firefox
 or a single tag
 
-    ./gradlew runCukeTests -PcukeTags=@tagName
+    ./gradlew runCukeTests -Ptags=@tagName
 ### From IDE
 Features can be executed with jUnit by running class CukesRunner
 

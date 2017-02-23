@@ -6,32 +6,30 @@ repositories {
     jcenter()
 }
 
-
 dependencies {
-    ext {
-        cucumber_version = '1.2.5'
-        geb_version = '1.1.1'
-        groovy_version = '2.4.8'
-        selenium_version = '3.0.1'
-        apache_ant = '1.10.1'
-    }
+    ext.cucumber_version = '1.2.5'
 
-    compile "org.codehaus.groovy:groovy-all:$groovy_version"
-    compile "org.gebish:geb-core:$geb_version"
     compile "info.cukes:cucumber-core:$cucumber_version"
     compile "info.cukes:cucumber-groovy:$cucumber_version"
     compile "info.cukes:cucumber-junit:$cucumber_version"
-    compile "org.seleniumhq.selenium:selenium-java:$selenium_version"
-    compile "org.apache.ant:ant:$apache_ant"
+    compile "org.codehaus.groovy:groovy-all:2.4.8"
+    compile "org.gebish:geb-core:1.1.1"
+    compile "org.seleniumhq.selenium:selenium-java:3.0.1"
+    compile "org.apache.ant:ant:1.10.1"
+    compile "io.github.bonigarcia:webdrivermanager:1.6.0"
+    compile "org.slf4j:slf4j-simple:1.6.1"
 }
 
 task runCukeTests(type: Test) {
     description = 'Geb based UI tests using cucumber'
 
-    ext.cucumberTags = project.hasProperty('cukeTags') ? "${cukeTags}" : "@all"
-    jvmArgs "-Dcucumber.options= --tags ${cucumberTags}"
+    ext.cucumberTags = project.hasProperty('tags') ? "${cukeTags}" : "@all"
+    ext.webdriver = project.findProperty('webdriver') ?: 'chrome'
+    List testArgs = ["-Dgeb.env=${webdriver}", "-Dcucumber.options=--tags ${cucumberTags}"]
+    
+    jvmArgs testArgs
 
     testLogging {
-        events "standardOut"
+        events "standardOut", "standardError"
     }
 }
