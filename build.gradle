@@ -1,6 +1,19 @@
+import groovyx.gpars.GParsPool
+import net.masterthought.cucumber.ReportBuilder
+import net.masterthought.cucumber.Configuration
+
 apply plugin: 'groovy'
 apply plugin: 'idea'
 
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "org.codehaus.gpars:gpars:1.2.1", "net.masterthought:cucumber-reporting:3.5.1"
+    }
+}
 
 repositories {
     jcenter()
@@ -12,6 +25,8 @@ dependencies {
     compile "info.cukes:cucumber-core:$cucumber_version"
     compile "info.cukes:cucumber-groovy:$cucumber_version"
     compile "info.cukes:cucumber-junit:$cucumber_version"
+    compile "net.masterthought:cucumber-reporting:3.5.1"
+    compile "org.codehaus.gpars:gpars:1.2.1"
     compile "org.codehaus.groovy:groovy-all:2.4.8"
     compile "org.gebish:geb-core:1.1.1"
     compile "org.seleniumhq.selenium:selenium-java:3.0.1"
@@ -20,16 +35,72 @@ dependencies {
     compile "org.slf4j:slf4j-simple:1.6.1"
 }
 
-task runCukeTests(type: Test) {
-    description = 'Geb based UI tests using cucumber'
+ext {
+    cucumberTags = project.findProperty('tags') ?: "~@incomplete"
+    webdriver = project.findProperty('webdriver') ?: 'chrome'
+}
 
-    ext.cucumberTags = project.hasProperty('tags') ? "${cukeTags}" : "@all"
-    ext.webdriver = project.findProperty('webdriver') ?: 'chrome'
-    List testArgs = ["-Dgeb.env=${webdriver}", "-Dcucumber.options=--tags ${cucumberTags}"]
-    
+task runCukeTestsInSequence(type: Test) {
+    description = 'Geb based UI tests execution in sequence'
+    List testArgs = ["-Dgeb.env=${webdriver}", "-Dcucumber.options=--tags ${cucumberTags} --plugin json:${reporting.baseDir}/cucumber/features.json"]
+
     jvmArgs testArgs
 
     testLogging {
         events "standardOut", "standardError"
     }
+
+    doLast {
+        generateReport()
+    }
+}
+
+task runCukeTestsInParallel() {
+    description = 'Geb based UI tests execution in parallel'
+    dependsOn testClasses
+
+    doLast {
+        def features = fileTree(dir: 'src', include: '**/features/*.feature')
+        def testArgs = { File file ->
+            [
+                    "--tags", "${cucumberTags}",
+                    "--glue", "classpath:lv/neueda/puzzlers/web/steps/",
+                    "--plugin", "json:${reporting.baseDir}/cucumber/${file.name}.json",
+                    "${file.absolutePath}"
+            ]
+        }
+
+        GParsPool.withPool(8) {
+            features.eachParallel { File file ->
+                javaexec {
+                    main = 'cucumber.api.cli.Main'
+                    classpath = sourceSets.test.runtimeClasspath
+                    systemProperties = ['geb.env': webdriver]
+                    args testArgs(file)
+                }
+                println "${file.name}"
+            }
+        }
+        generateReport()
+    }
+}
+
+def generateReport() {
+    def jsonReports = fileTree(dir: "${reporting.baseDir}/cucumber/", include: '**/*.json')
+    File reportOutputDirectory = new File("${reporting.baseDir}/cucumber")
+
+    //Workaround for creating file names that are too long
+    jsonReports.each { File file ->
+        file.text = file.text.replaceAll(/"uri": [^\n\r]*"(.*)"/) { String fullMatch, String uri ->
+            "\"uri\": \"${uri.split('/').last()}\""
+        }
+    }
+
+    List<String> jsonReportFiles = jsonReports.collect { "${it.absolutePath}".toString() } as List<String>
+
+    def configuration = new Configuration(reportOutputDirectory, "puzzlers")
+
+    ReportBuilder reportBuilder = new ReportBuilder(jsonReportFiles, configuration)
+    reportBuilder.generateReports()
+    println("\nReport available on: file:///${reporting.baseDir}/cucumber/cucumber-html-reports/overview-features.html")
 }

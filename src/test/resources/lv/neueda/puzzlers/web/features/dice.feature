@@ -1,4 +1,4 @@
-@all @dice
+@dice
 Feature: Dice
 
   Background:

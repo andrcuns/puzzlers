@@ -1,18 +1,21 @@
 # puzzlers
-UI testing project using cucumber and geb frameworks.
+UI testing project using cucumber and geb frameworks with ability to run tests in parallel.
 Windows, Linux and MAC with Chrome, Firefox and PhantomJs are supported.
 
 ## Running
 ### From commandline
-To run all features with chrome browser
+To run all features in sequence
 
-    ./gradlew runCukeTests
-To run in a different browser
+    ./gradlew runCukeTestsInSequence
+To run all features in parallel
 
-    ./gradlew runCukeTests -Pwebdriver=firefox
-or a single tag
+    ./gradlew runCukeTestsInParallel
+To run a single tag
 
-    ./gradlew runCukeTests -Ptags=@tagName
+    ./gradlew runCukeTestsInParallel -Ptags=@tagName
+To run in firefox
+
+    ./gradlew runCukeTestsInParallel -Pwebdriver=firefox
 ### From IDE
 Features can be executed with jUnit by running class CukesRunner
 
