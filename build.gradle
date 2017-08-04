@@ -27,11 +27,10 @@ dependencies {
     compile "info.cukes:cucumber-junit:$cucumber_version"
     compile "net.masterthought:cucumber-reporting:3.5.1"
     compile "org.codehaus.gpars:gpars:1.2.1"
-    compile "org.codehaus.groovy:groovy-all:2.4.8"
+    compile "org.codehaus.groovy:groovy-all:2.4.12"
     compile "org.gebish:geb-core:1.1.1"
-    compile "org.seleniumhq.selenium:selenium-java:3.0.1"
-    compile "org.apache.ant:ant:1.10.1"
-    compile "io.github.bonigarcia:webdrivermanager:1.6.0"
+    compile "org.seleniumhq.selenium:selenium-java:3.4.0"
+    compile "io.github.bonigarcia:webdrivermanager:1.7.1"
     compile "org.slf4j:slf4j-simple:1.6.1"
 }
 
@@ -102,5 +101,5 @@ def generateReport() {
 
     ReportBuilder reportBuilder = new ReportBuilder(jsonReportFiles, configuration)
     reportBuilder.generateReports()
-    println("\nReport available on: file:///${reporting.baseDir}/cucumber/cucumber-html-reports/overview-features.html")
+    println "\nReport available on: file:///${reporting.baseDir}/cucumber/cucumber-html-reports/overview-features.html"
 }
